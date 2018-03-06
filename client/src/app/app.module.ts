@@ -17,6 +17,10 @@ import {AddUserComponent} from './users/add-user.component';
 import {TrackerListComponent} from './trackers/tracker-list.component';
 import {TrackerListService} from './trackers/tracker-list.service';
 
+import {JournalListComponent} from "./journals/journal-list.component";
+import {JournalListService} from "./journals/journal-list.service";
+import {AddJournalComponent} from "./journals/add-journal.component";
+
 @NgModule({
     imports: [
         BrowserModule,
@@ -29,11 +33,14 @@ import {TrackerListService} from './trackers/tracker-list.service';
         HomeComponent,
         UserListComponent,
         AddUserComponent,
-        TrackerListComponent
+        TrackerListComponent,
+        JournalListComponent,
+        AddJournalComponent
     ],
     providers: [
         UserListService,
         TrackerListService,
+        JournalListService,
         {provide: APP_BASE_HREF, useValue: '/'},
         {provide: MATERIAL_COMPATIBILITY_MODE, useValue: true}
     ],
