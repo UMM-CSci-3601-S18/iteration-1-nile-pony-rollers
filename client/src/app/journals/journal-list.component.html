@@ -19,9 +19,9 @@
                 </mat-form-field>
 
                 <mat-accordion *ngIf="journals; else journalError" >
-                    <mat-expansion-panel #elem class="journals" [id]="journal.time" [expanded]="this.isHighlighted(journal)" *ngFor="let journal of this.filterJournals(journalSubject, journalBody)">
+                    <mat-expansion-panel #elem class="journals" [id]="journal.body" [expanded]="this.isHighlighted(journal)" *ngFor="let journal of this.filterJournals(journalSubject, journalBody)">
                         <mat-expansion-panel-header>
-                            <mat-panel-title matTooltip="subject: {{journal.subject}}" >{{journal.time}}</mat-panel-title>
+                            <mat-panel-title matTooltip="subject: {{journal.subject}}" >{{journal.date}}</mat-panel-title>
 
                         </mat-expansion-panel-header>
                         <mat-panel-description>Body: {{journal.body}}</mat-panel-description>

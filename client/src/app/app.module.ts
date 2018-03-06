@@ -45,7 +45,8 @@ import {AddJournalComponent} from "./journals/add-journal.component";
         {provide: MATERIAL_COMPATIBILITY_MODE, useValue: true}
     ],
     entryComponents: [
-      AddUserComponent
+      AddUserComponent,
+        AddJournalComponent
     ],
     bootstrap: [AppComponent]
 })
