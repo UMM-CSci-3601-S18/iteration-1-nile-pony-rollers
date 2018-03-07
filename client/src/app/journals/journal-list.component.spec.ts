@@ -72,7 +72,7 @@ describe('Journal list', () => {
     });
 
     it('contain a body with \'cold\'', () => {
-        expect(journalList.journals.some((journal: Journal) => journal.body === 'cold')).toBe(true);
+        expect(journalList.journals.some((journal: Journal) => journal.body === 'it was cold')).toBe(true);
     });
 
     it('doesn\'t contain a subject of \'Sunday\'', () => {
