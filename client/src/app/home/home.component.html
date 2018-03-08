@@ -1,5 +1,17 @@
-        <div layout = "row" layout-align="space-around stretch">
-            <button mat-raised-button color="primary"(click)="addEmotion('happy')">Happy</button>
-            <button mat-raised-button color="accent" (click)="addEmotion('neutral')">Neutral</button>
-            <button mat-raised-button color="warn"   (click)="addEmotion('sad')">Sad</button>
-        </div>
+<div>
+    <ol>
+        <button id = "addNewUser" mat-raised-button (click)="openDialogg()">Emergency Contacts</button>
+    </ol>
+</div>
+
+<div class="container text-center">
+    <div class="mood-buttons text-center">
+        <button (click)="addEmotion(slideIndex); openDialog(slideIndex);">
+            <img [attr.src]="image">
+        </button>
+    </div>
+
+    <a mat-raised-button type="button" class="prev" (click)="plusSlides(-1)"><mat-icon>chevron_left</mat-icon></a>
+    <a mat-raised-button type="button" class="next" (click)="plusSlides(1)"><mat-icon>chevron_right</mat-icon></a>
+
+</div>

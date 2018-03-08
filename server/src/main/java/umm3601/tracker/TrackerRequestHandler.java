@@ -86,7 +86,7 @@ public class TrackerRequestHandler {
                     //This is a problem and should not be this way but here ya go
                     String date = dbO.getString("date");
 
-                    System.err.println("Adding new tracker [emoji=" + emoji + ", date=" + date + ']');
+                    System.err.println("Adding new tracker [emoji=" + emoji + ", date=" + date.toString() + ']');
                     return trackerController.addNewTracker(emoji).toString();
                 }
                 catch(NullPointerException e)
