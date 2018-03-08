@@ -23,5 +23,9 @@
 
 /* Add a background color on hover */
 .mood-buttons button:hover {
-    background-color: #3e8e41;
+    background-color: transparent;
+}
+
+body {
+    background-image: url("https://i.ytimg.com/vi/cXH1ugjl8-o/maxresdefault.jpg");
 }

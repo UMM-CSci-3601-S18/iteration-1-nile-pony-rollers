@@ -15,8 +15,8 @@ import {ResponseComponent4} from "./response-4.component";
 })
 export class HomeComponent {
     public slideIndex = 0;
-    public emojis: string[] = ["./assets/grinning.png", "./assets/slightly-smiling.png", "./assets/neutral-face.png",
-        "./assets/slightly-frowning-face.png", "./assets/disappointed-face.png"];
+    public emojis: string[] = ["./assets/grinning1.png", "./assets/slightly-smiling1.png", "./assets/neutral-face1.png",
+        "./assets/Sad.png", "./assets/disappointed-face1.png"];
 
     public emojisString: string[] = ["Verry Happy", "Happy", "Normal", "Sad", "Very Sad"];
     public image = this.emojis[this.slideIndex];
@@ -55,8 +55,8 @@ export class HomeComponent {
         console.log(n);
         if (n == 0){
             const dialogRef = this.dialog.open(ResponseComponent,{
-                width: '500px',
-                height: '500px'
+                width: '800px',
+                height: '750px'
             });
         }
         else if(n == 1){
