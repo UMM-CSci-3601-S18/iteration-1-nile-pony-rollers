@@ -87,6 +87,8 @@ public class JournalControllerSpec
         String jsonResult = journalController.getJournals(emptyMap);
         BsonArray docs = parseJsonArray(jsonResult);
 
+        assertEquals("Should be 4 users", 4, docs.size());
+
     }
 
     @Test
