@@ -87,14 +87,8 @@ public class JournalControllerSpec
         String jsonResult = journalController.getJournals(emptyMap);
         BsonArray docs = parseJsonArray(jsonResult);
 
-        assertEquals("Should be 4 journals", 4, docs.size());
-        List<String> subjects = docs
-            .stream()
-            .map(JournalControllerSpec::getSubject)
-            .sorted()
-            .collect(Collectors.toList());
-        List<String> expectedSubjects = Arrays.asList("Tuesday", "Wednesday", "Thursday", "Friday");
-        assertEquals("Subjects should match", expectedSubjects, subjects);
+        assertEquals("Should be 4 users", 4, docs.size());
+
     }
 
     @Test
@@ -113,5 +107,22 @@ public class JournalControllerSpec
         List<String> expectedSubjects = Arrays.asList("Wednesday");
         assertEquals("Subjects should match", expectedSubjects, subjects);
     }
-    //add testing for adding new journals
+
+    @Test
+    public void addJournalTest(){
+        String newId = journalController.addNewJournal("Saturday","today it is hot");
+
+        assertNotNull("Add new journals should return true,", newId);
+        Map<String, String[]> argMap = new HashMap<>();
+        argMap.put("subject", new String[] { "Saturday" });
+        String jsonResult = journalController.getJournals(argMap);
+        BsonArray docs = parseJsonArray(jsonResult);
+
+        List<String> subject = docs
+            .stream()
+            .map(JournalControllerSpec::getSubject)
+            .sorted()
+            .collect(Collectors.toList());
+        assertEquals("Should return subject of new journal", "Saturday", subject.get(0));
+    }
 }
