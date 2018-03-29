@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { MATERIAL_COMPATIBILITY_MODE } from '@angular/material';
@@ -19,6 +19,12 @@ import {AddUserComponent} from './users/add-user.component';
 import {TrackerListComponent} from './trackers/tracker-list.component';
 import {TrackerListService} from './trackers/tracker-list.service';
 
+
+import {GoalsComponent} from "./goals/goals.component";
+import {GoalsService} from "./goals/goals.service";
+import {AddGoalComponent} from "./goals/add-goal.component";
+import {MatProgressBarModule} from '@angular/material/progress-bar';
+
 import {JournalListComponent} from "./journals/journal-list.component";
 import {JournalListService} from "./journals/journal-list.service";
 import {AddJournalComponent} from './journals/add-journal.component';
@@ -29,9 +35,13 @@ import {ResponseComponent2} from "./home/response-2.component";
 import {ResponseComponent3} from "./home/response-3.component";
 import {ResponseComponent4} from "./home/response-4.component";
 import {ResponseComponent5} from "./home/response-5.component";
+import {ResponseThanksComponent} from "./home/responseThanks.component";
 import {EmergencyComponent} from './home/emergency.component';
 
 import {MatSelectModule} from '@angular/material/select';
+
+import {ReportChartComponent} from './reports/report-chart.component'
+import {ReportChartService} from "./reports/report-chart.service";
 
 @NgModule({
     imports: [
@@ -39,14 +49,46 @@ import {MatSelectModule} from '@angular/material/select';
         HttpClientModule,
         Routing,
         CustomModule,
-        MatSelectModule
+        MatSelectModule,
+        MatProgressBarModule
     ],
     declarations: [
         AppComponent,
         HomeComponent,
         UserListComponent,
+        GoalsComponent,
         AddUserComponent,
         AddJournalComponent,
+        AddGoalComponent,
+        TrackerListComponent,
+        JournalListComponent,
+        ResponseComponent,
+        ResponseComponent2,
+        ResponseComponent3,
+        ResponseComponent4,
+        ResponseComponent5,
+        ResponseThanksComponent,
+        EmergencyComponent,
+        EditJournalComponent,
+        ReportChartComponent
+    ],
+    providers: [
+        UserListService,
+        TrackerListService,
+        JournalListService,
+        GoalsService,
+        ReportChartService,
+        {provide: APP_BASE_HREF, useValue: '/'},
+        {provide: MATERIAL_COMPATIBILITY_MODE, useValue: true}
+    ],
+    entryComponents: [
+        AppComponent,
+        HomeComponent,
+        UserListComponent,
+        GoalsComponent,
+        AddUserComponent,
+        AddJournalComponent,
+        AddGoalComponent,
         TrackerListComponent,
         JournalListComponent,
         ResponseComponent,
@@ -55,27 +97,13 @@ import {MatSelectModule} from '@angular/material/select';
         ResponseComponent4,
         ResponseComponent5,
         EmergencyComponent,
-        EditJournalComponent
+        EditJournalComponent,
+        ReportChartComponent,
+        ResponseThanksComponent
     ],
-    providers: [
-        UserListService,
-        TrackerListService,
-        JournalListService,
-        {provide: APP_BASE_HREF, useValue: '/'},
-        {provide: MATERIAL_COMPATIBILITY_MODE, useValue: true}
-    ],
-    entryComponents: [
-        AddUserComponent,
-        AddJournalComponent,
-        ResponseComponent,
-        EmergencyComponent,
-        ResponseComponent,
-        ResponseComponent2,
-        ResponseComponent3,
-        ResponseComponent4,
-        ResponseComponent5,
-        EditJournalComponent
-
+    schemas: [
+        CUSTOM_ELEMENTS_SCHEMA,
+        NO_ERRORS_SCHEMA
     ],
     bootstrap: [AppComponent]
 })

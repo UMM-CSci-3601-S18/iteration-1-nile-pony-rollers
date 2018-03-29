@@ -13,11 +13,16 @@ export class TrackerListComponent implements OnInit {
     // These are public so that tests can reference them (.spec.ts)
     public trackers: Tracker[];
     public filteredTrackers: Tracker[];
+    showPage = false;
 
     // These are the target values used in searching.
     // We should rename them to make that clearer.
     public trackerEmoji: string;
     public trackerTime: string;
+    public trackerRating: number;
+    public length: number;
+    public index = 0;
+    public progress: number;
 
 
 
@@ -33,8 +38,8 @@ export class TrackerListComponent implements OnInit {
         return tracker._id['$oid'] === this.highlightedID['$oid'];
     }
 
-    public addEmoji(newEmoji: string): void {
-        const newTracker: Tracker = {_id: '', emoji: newEmoji, date: ''};
+    public addEmoji(newEmoji: string, newRating:number): void {
+        const newTracker: Tracker = {_id: '',rating:newRating, emoji: newEmoji, date: '', email: ''};
         this.trackerListService.addNewEmoji(newTracker).subscribe(
             trackers => {
                 this.refreshTrackers();
@@ -45,7 +50,7 @@ export class TrackerListComponent implements OnInit {
         );
     }
 
-    public filterTrackers(searchEmoji: string, searchTime: string): Tracker[] {
+    public filterTrackers(searchEmoji: string, searchTime: string, searchRating:number): Tracker[] {
 
         this.filteredTrackers = this.trackers;
 
@@ -63,6 +68,21 @@ export class TrackerListComponent implements OnInit {
             this.filteredTrackers = this.filteredTrackers.filter(tracker => {
                 return !searchTime || tracker.date == searchTime;
             });
+        }
+
+        //Filter by rating
+        if (searchRating != null){
+            this.filteredTrackers = this.filteredTrackers.filter(tracker => {
+                return !searchRating || tracker.rating == searchRating;
+            })
+        }
+
+        this.length = this.filteredTrackers.length;
+        if (this.index + 10 > this.length) {
+            this.index = this.length - 10;
+        }
+        if (this.index - 10 < 0) {
+            this.index = 0;
         }
 
         return this.filteredTrackers;
@@ -83,12 +103,18 @@ export class TrackerListComponent implements OnInit {
         trackerListObservable.subscribe(
             trackers => {
                 this.trackers = trackers;
-                this.filterTrackers(this.trackerEmoji, this.trackerTime);
+                this.filterTrackers(this.trackerEmoji, this.trackerTime, this.trackerRating);
+                this.length = this.trackers.length;
             },
             err => {
                 console.log(err);
             });
         return trackerListObservable;
+    }
+
+    loadProgressBar(): void {
+
+        this.progress = (this.index / this.length) * 100;
     }
 
 
@@ -104,9 +130,49 @@ export class TrackerListComponent implements OnInit {
         );
     }
 
+    prevIndex(): void{
+        if(this.index == this.length - 10){
+            this.index = this.index - 10;
+        }
+        else if(this.index % 10 != 0){
+            while(this.index % 10 != 0){
+                this.index = this.index - 1;
+            }
+        }
+        else{
+            this.index = this.index - 10;
+        }
+        this.loadProgressBar();
+    }
+
+    nextIndex(): void{
+        this.index = this.index + 10;
+        if(this.index + 10 >= this.length){
+            this.index = this.length;
+        }
+        this.loadProgressBar();
+    }
+
+    firstIndex(): void{
+        this.index = 0;
+        this.loadProgressBar();
+    }
+
+    lastIndex(): void{
+        this.index = this.length;
+        this.loadProgressBar();
+    }
+
 
     ngOnInit(): void {
         this.refreshTrackers();
         this.loadService();
+        this.loadProgressBar();
+        if(gapi == null || gapi.auth2 == null || gapi.auth2.getAuthInstance().isSignedIn.get() == true){
+            this.showPage = true;
+        } else{
+            this.showPage = false;
+        }
+        console.log(this.showPage + " window.email " + window['email']);
     }
 }

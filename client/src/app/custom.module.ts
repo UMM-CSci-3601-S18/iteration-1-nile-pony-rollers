@@ -6,10 +6,15 @@ import { CovalentLayoutModule, CovalentStepsModule, CovalentCommonModule /*, any
 import {
     MatListModule, MatButtonModule, MatCardModule, MatIconModule,
     MatInputModule, MatMenuModule, MatSidenavModule, MatToolbarModule,
-    MatExpansionModule, MatTooltipModule, MatDialogModule,
+
+    MatExpansionModule, MatTooltipModule, MatDialogModule, MatGridListModule,
+    MatSnackBarModule, MatSliderModule, MatProgressBarModule,
+
 } from '@angular/material';
 
 import { FlexLayoutModule, } from '@angular/flex-layout';
+
+import {GoogleSignInComponent} from 'angular-google-signin';
 
 import { FormsModule } from '@angular/forms';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -35,6 +40,10 @@ const MATERIAL_MODULES: any[] = [
     MatExpansionModule,
     MatTooltipModule,
     MatDialogModule,
+    MatGridListModule,
+    MatSnackBarModule,
+    MatSliderModule,
+    MatProgressBarModule
 ];
 
 const COVALENT_MODULES: any[] = [
@@ -52,13 +61,14 @@ const COVALENT_MODULES: any[] = [
         FLEX_LAYOUT_MODULES,
     ],
     declarations: [
-
+        GoogleSignInComponent
     ],
     exports: [
         ANGULAR_MODULES,
         MATERIAL_MODULES,
         COVALENT_MODULES,
         FLEX_LAYOUT_MODULES,
+        GoogleSignInComponent
     ]
 })
 

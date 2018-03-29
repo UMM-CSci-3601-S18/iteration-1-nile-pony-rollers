@@ -4,13 +4,16 @@ import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
 import spark.Request;
 import spark.Response;
+import umm3601.report.ReportController;
+import umm3601.report.ReportRequestHandler;
 import umm3601.user.UserController;
 import umm3601.user.UserRequestHandler;
 import umm3601.tracker.TrackerController;
 import umm3601.tracker.TrackerRequestHandler;
 import umm3601.journal.JournalController;
 import umm3601.journal.JournalRequestHandler;
-
+import umm3601.goal.GoalController;
+import umm3601.goal.GoalRequestHandler;
 import java.io.IOException;
 
 
@@ -21,6 +24,8 @@ public class Server {
     private static final String userDatabaseName = "dev";
     private static final String trackerDatabaseName = "dev";
     private static final String journalDatabaseName = "dev";
+    private static final String goalDatabaseName = "dev";
+    private static final String reportDatabaseName = "dev";
 
     private static final int serverPort = 4567;
 
@@ -30,6 +35,8 @@ public class Server {
         MongoDatabase userDatabase = mongoClient.getDatabase(userDatabaseName);
         MongoDatabase trackerDatabase = mongoClient.getDatabase(trackerDatabaseName);
         MongoDatabase journalDatabase = mongoClient.getDatabase(journalDatabaseName);
+        MongoDatabase goalDatabase = mongoClient.getDatabase(goalDatabaseName);
+        MongoDatabase reportDatabase = mongoClient.getDatabase(reportDatabaseName);
 
         UserController userController = new UserController(userDatabase);
         UserRequestHandler userRequestHandler = new UserRequestHandler(userController);
@@ -39,6 +46,12 @@ public class Server {
 
         JournalController journalController = new JournalController(journalDatabase);
         JournalRequestHandler journalRequestHandler = new JournalRequestHandler(journalController);
+
+        GoalController goalController = new GoalController(goalDatabase);
+        GoalRequestHandler goalRequestHandler = new GoalRequestHandler(goalController);
+
+        ReportController reportController = new ReportController(reportDatabase);
+        ReportRequestHandler reportRequestHandler = new ReportRequestHandler(reportController);
 
         //Configure Spark
         port(serverPort);
@@ -71,6 +84,18 @@ public class Server {
         // Redirects for the "home" page
         redirect.get("", "/");
 
+        // Redirects for the "trackers" page
+        redirect.get("", "/trackers");
+
+        // Redirects for the "journals" page
+        redirect.get("", "/journals");
+
+        // Redirects for the "goals" page
+        redirect.get("", "/goals");
+
+        // Redirects for the "reports" page
+        redirect.get("", "/reports");
+
         /// User Endpoints ///////////////////////////
         /////////////////////////////////////////////
 
@@ -94,6 +119,19 @@ public class Server {
         get("api/journals/:id", journalRequestHandler::getJournalJSON);
         post("api/journals/new", journalRequestHandler::addNewJournal);
         post("api/journals/edit", journalRequestHandler::editJournal);
+        /// Report Endpoints ///////////////////////////
+        /////////////////////////////////////////////
+
+        get("api/reports", reportRequestHandler::getReports);
+
+        /// Goal Endpoints ///////////////////////////
+        /////////////////////////////////////////////
+
+        get("api/goals", goalRequestHandler::getGoals);
+        get("api/goals/:id", goalRequestHandler::getGoalJSON);
+        post("api/goals/new", goalRequestHandler::addNewGoal);
+        post("api/goals/edit", goalRequestHandler::editGoal);
+        delete("api/goals/delete/:id", goalRequestHandler::deleteGoal);
 
         // An example of throwing an unhandled exception so you can see how the
         // Java Spark debugger displays errors like this.

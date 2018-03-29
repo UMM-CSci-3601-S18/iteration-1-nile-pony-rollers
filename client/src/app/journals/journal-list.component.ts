@@ -16,12 +16,13 @@ export class JournalListComponent implements OnInit {
     // These are public so that tests can reference them (.spec.ts)
     public journals: Journal[];
     public filteredJournals: Journal[];
-
-    // These are the target values used in searching.
-    // We should rename them to make that clearer.
     public journalSubject: string;
     public journalBody: string;
     public journalDate: any;
+    public length: number;
+    public index = 0;
+    public progress: number;
+    showPage = false;
 
     // The ID of the
     private highlightedID: {'$oid': string} = { '$oid': '' };
@@ -38,7 +39,7 @@ export class JournalListComponent implements OnInit {
     openDialog(): void {
         const newJournal: Journal = {_id: '', subject: '', body: '', date: ''};
         const dialogRef = this.dialog.open(AddJournalComponent, {
-            width: '500px',
+            width: '300px',
             data: { journal: newJournal }
         });
 
@@ -57,17 +58,17 @@ export class JournalListComponent implements OnInit {
     }
 
     openDialogReview(_id: string, subject: string, body: string, date: string): void {
-        console.log(_id + ' ' + subject);
+        console.log(_id + ' ' + subject + body + date);
         const newJournal: Journal = {_id: _id, subject: subject, body: body, date: date};
         const dialogRef = this.dialog.open(EditJournalComponent, {
-            width: '500px',
+            width: '300px',
             data: { journal: newJournal }
         });
 
         dialogRef.afterClosed().subscribe(result => {
             this.journalListService.editJournal(result).subscribe(
                 editJournalResult => {
-                    //this.highlightedID = editJournalResult;
+                    this.highlightedID = editJournalResult;
                     this.refreshJournals();
                 },
                 err => {
@@ -96,29 +97,30 @@ export class JournalListComponent implements OnInit {
             searchBody = searchBody.toLocaleLowerCase();
 
             this.filteredJournals = this.filteredJournals.filter(journal => {
-                return !searchBody || journal.body.toLowerCase().indexOf(searchSubject) !== -1;
+                return !searchBody || journal.body.toLowerCase().indexOf(searchBody) !== -1;
             });
+        }
+
+        this.length = this.filteredJournals.length;
+        if (this.index + 10 > this.length) {
+            this.index = this.length - 10;
+        }
+        if (this.index - 10 < 0) {
+            this.index = 0;
         }
 
         return this.filteredJournals;
     }
 
-    /**
-     * Starts an asynchronous operation to update the journals list
-     *
-     */
-    refreshJournals(): Observable<Journal[]> {
-        // Get Journals returns an Observable, basically a "promise" that
-        // we will get the data from the server.
-        //
-        // Subscribe waits until the data is fully downloaded, then
-        // performs an action on it (the first lambda)
+    // Starts an asynchronous operation to update the journals list
 
+    refreshJournals(): Observable<Journal[]> {
         const journalListObservable: Observable<Journal[]> = this.journalListService.getJournals();
         journalListObservable.subscribe(
             journals => {
                 this.journals = journals;
                 this.filterJournals(this.journalSubject, this.journalBody);
+                this.length = this.journals.length;
             },
             err => {
                 console.log(err);
@@ -126,23 +128,67 @@ export class JournalListComponent implements OnInit {
         return journalListObservable;
     }
 
-/**
- * we might want the server to search for entries instead of angular ?
+    loadProgressBar(): void {
+
+        this.progress = (this.index / this.length) * 100;
+    }
+
     loadService(): void {
-        this.journalListService.getJournals(this.userCompany).subscribe(
-            users => {
-                this.users = users;
-                this.filteredUsers = this.users;
+        this.journalListService.getJournals(this.journalSubject).subscribe(
+            journals => {
+                this.journals = journals;
+                this.filteredJournals = this.journals;
             },
             err => {
                 console.log(err);
             }
         );
     }
-**/
+
+    prevIndex(): void{
+        if(this.index == this.length - 10){
+            this.index = this.index - 10;
+        }
+        else if(this.index % 10 != 0){
+            while(this.index % 10 != 0){
+                this.index = this.index - 1;
+            }
+        }
+        else{
+            this.index = this.index - 10;
+        }
+        this.loadProgressBar();
+    }
+
+    nextIndex(): void{
+        this.index = this.index + 10;
+        if(this.index + 10 >= this.length){
+            this.index = this.length;
+        }
+        this.loadProgressBar();
+    }
+
+    firstIndex(): void{
+        this.index = 0;
+        this.loadProgressBar();
+    }
+
+    lastIndex(): void{
+        this.index = this.length;
+        this.loadProgressBar();
+    }
 
     ngOnInit(): void {
         this.refreshJournals();
+        this.loadService();
+        this.loadProgressBar();
         //this.loadService();
+    if(gapi == null || gapi.auth2 == null || gapi.auth2.getAuthInstance().isSignedIn.get() == true){
+        this.showPage = true;
+    } else{
+        this.showPage = false;
     }
+    console.log(this.showPage + " window.email " + window['email']);
+    }
+
 }

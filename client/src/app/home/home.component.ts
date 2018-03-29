@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {TrackerListService} from "../trackers/tracker-list.service";
 import {Tracker} from "../trackers/tracker";
 import {MatDialog} from '@angular/material';
@@ -7,28 +7,37 @@ import {ResponseComponent2} from "./response-2.component";
 import {ResponseComponent3} from "./response-3.component";
 import {ResponseComponent5} from "./response-5.component";
 import {ResponseComponent4} from "./response-4.component";
+import {ResponseThanksComponent} from "./responseThanks.component";
 
 @Component({
     selector: 'app-home-list-component',
     templateUrl: 'home.component.html',
     styleUrls: ['./home.component.css']
 })
-export class HomeComponent {
-    public slideIndex = 0;
-    public emojis: string[] = ["./assets/grinning.png", "./assets/slightly-smiling.png", "./assets/neutral-face.png",
-        "./assets/slightly-frowning-face.png", "./assets/disappointed-face.png"];
+export class HomeComponent implements OnInit{
 
-    public emojisString: string[] = ["Very Happy", "Happy", "Normal", "Sad", "Very Sad"];
+    public slideIndex = 0;
+    public emojis: string[] = ["./assets/happy.png",  "./assets/meh.png",
+        "./assets/sad.png", "./assets/angry.png","./assets/anxious.png"];
+
+    public emojisString: string[] = ["Happy", "Normal", "Sad", "Angry", "Anxious"];
     public image = this.emojis[this.slideIndex];
+    public emojiExplain = this.emojisString[this.slideIndex];
+    public emojiRating: number = 3;
+    showPage = false;
 
     constructor(public trackerListService: TrackerListService, public dialog: MatDialog) {
-
     }
 
-    public addEmotion(index: number): void {
+    public addEmotion(emojiIndex: number): void {
 
-        console.log(this.emojisString[index]);
-        const newTracker: Tracker = {_id: '', emoji: this.emojisString[index], date: ''};
+        console.log("emojiString:"+this.emojisString[emojiIndex]);
+        console.log("emojiRating: " + this.emojiRating);
+        const newTracker: Tracker = {_id: '',
+            rating:this.emojiRating,
+            emoji: this.emojisString[emojiIndex],
+            date: '',
+            email:''};
         this.trackerListService.addNewEmoji(newTracker).subscribe(
             trackers => {
             },
@@ -37,6 +46,7 @@ export class HomeComponent {
             }
         );
     }
+
 
     public plusSlides(n: number): void{
         this.slideIndex = this.slideIndex + n;
@@ -48,7 +58,16 @@ export class HomeComponent {
         }
         console.log(this.slideIndex + ' index');
         console.log(this.image);
+        console.log(this.emojiExplain);
         this.image = this.emojis[this.slideIndex];
+        this.emojiExplain = this.emojisString[this.slideIndex];
+    }
+
+    openThanks():void{
+        const dialogRef = this.dialog.open(ResponseThanksComponent,{
+            width: '855px',
+            height: '485px'
+        })
     }
 
     openDialog(n: number): void {
@@ -87,5 +106,14 @@ export class HomeComponent {
             });
         }
 
+    }
+
+    ngOnInit(){
+        if(gapi == null || gapi.auth2 == null || gapi.auth2.getAuthInstance().isSignedIn.get() == true){
+            this.showPage = true;
+        } else{
+            this.showPage = false;
+        }
+        console.log(this.showPage + " window.email " + window['email']);
     }
 }
